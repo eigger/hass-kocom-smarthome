@@ -105,6 +105,6 @@ def mask(value: object, keep: int = 4) -> str:
     public issue.
     """
     text = str(value)
-    if len(text) <= keep:
+    if keep <= 0 or len(text) <= keep:
         return "*" * len(text)
     return "*" * (len(text) - keep) + text[-keep:]
