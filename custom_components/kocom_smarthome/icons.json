@@ -1,0 +1,96 @@
+{
+  "entity": {
+    "sensor": {
+      "elec_value": {
+        "default": "mdi:flash"
+      },
+      "elec_value_previous": {
+        "default": "mdi:flash"
+      },
+      "elec_avg": {
+        "default": "mdi:flash"
+      },
+      "elec_avg_previous": {
+        "default": "mdi:flash"
+      },
+      "elec_price": {
+        "default": "mdi:flash"
+      },
+      "elec_price_previous": {
+        "default": "mdi:flash"
+      },
+      "gas_value": {
+        "default": "mdi:fire"
+      },
+      "gas_value_previous": {
+        "default": "mdi:fire"
+      },
+      "gas_avg": {
+        "default": "mdi:fire"
+      },
+      "gas_avg_previous": {
+        "default": "mdi:fire"
+      },
+      "gas_price": {
+        "default": "mdi:fire"
+      },
+      "gas_price_previous": {
+        "default": "mdi:fire"
+      },
+      "heat_value": {
+        "default": "mdi:radiator"
+      },
+      "heat_value_previous": {
+        "default": "mdi:radiator"
+      },
+      "heat_avg": {
+        "default": "mdi:radiator"
+      },
+      "heat_avg_previous": {
+        "default": "mdi:radiator"
+      },
+      "heat_price": {
+        "default": "mdi:radiator"
+      },
+      "heat_price_previous": {
+        "default": "mdi:radiator"
+      },
+      "hotwater_value": {
+        "default": "mdi:hot-tub"
+      },
+      "hotwater_value_previous": {
+        "default": "mdi:hot-tub"
+      },
+      "hotwater_avg": {
+        "default": "mdi:hot-tub"
+      },
+      "hotwater_avg_previous": {
+        "default": "mdi:hot-tub"
+      },
+      "hotwater_price": {
+        "default": "mdi:hot-tub"
+      },
+      "hotwater_price_previous": {
+        "default": "mdi:hot-tub"
+      },
+      "water_value": {
+        "default": "mdi:water-pump"
+      },
+      "water_value_previous": {
+        "default": "mdi:water-pump"
+      },
+      "water_avg": {
+        "default": "mdi:water-pump"
+      },
+      "water_avg_previous": {
+        "default": "mdi:water-pump"
+      },
+      "water_price": {
+        "default": "mdi:water-pump"
+      },
+      "water_price_previous": {
+        "default": "mdi:water-pump"
+      }
+    }
+  }
+}

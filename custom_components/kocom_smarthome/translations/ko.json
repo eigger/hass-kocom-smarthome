@@ -1,0 +1,142 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "월패드에 등록된 휴대전화 번호를 하이픈(-) 없이 11자리로 입력해 주세요.",
+        "data": {
+          "phone_number": "휴대전화 번호"
+        }
+      },
+      "wallpad": {
+        "title": "월패드 인증",
+        "description": "월패드 또는 비디오폰 화면에 표시된 8자리 인증번호를 입력해 주세요. 인증번호는 잠시 후 만료되므로 바로 입력해 주세요.",
+        "data": {
+          "wallpad_number": "인증번호"
+        }
+      },
+      "options": {
+        "title": "옵션",
+        "description": "검침 데이터는 하루 단위로 갱신됩니다. 간격을 짧게 잡아도 값이 바뀌지 않고 단지 서버 부하만 늘어납니다.",
+        "data": {
+          "energy_interval": "에너지 스캔 간격 (시)"
+        }
+      }
+    },
+    "error": {
+      "network_error": "코콤 서버에 연결하지 못했습니다",
+      "auth_failed": "서버가 로그인을 거부했습니다",
+      "invalid_phone_number": "잘못된 전화번호입니다",
+      "invalid_auth_number": "인증번호는 8자리 숫자입니다",
+      "wallpad_auth_failure": "월패드 인증에 실패했습니다"
+    },
+    "abort": {
+      "already_configured": "이미 등록된 세대입니다",
+      "cannot_connect": "코콤 서버에 연결하지 못했습니다",
+      "registration_failed": "인증은 되었으나 등록된 월패드를 찾지 못했습니다"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "옵션",
+        "data": {
+          "energy_interval": "에너지 스캔 간격 (시)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "elec_value": {
+        "name": "전기 사용량"
+      },
+      "elec_value_previous": {
+        "name": "전월 전기 사용량"
+      },
+      "elec_avg": {
+        "name": "전기 단지 평균"
+      },
+      "elec_avg_previous": {
+        "name": "전월 전기 단지 평균"
+      },
+      "elec_price": {
+        "name": "전기 예상 요금"
+      },
+      "elec_price_previous": {
+        "name": "전월 전기 예상 요금"
+      },
+      "gas_value": {
+        "name": "가스 사용량"
+      },
+      "gas_value_previous": {
+        "name": "전월 가스 사용량"
+      },
+      "gas_avg": {
+        "name": "가스 단지 평균"
+      },
+      "gas_avg_previous": {
+        "name": "전월 가스 단지 평균"
+      },
+      "gas_price": {
+        "name": "가스 예상 요금"
+      },
+      "gas_price_previous": {
+        "name": "전월 가스 예상 요금"
+      },
+      "heat_value": {
+        "name": "난방 사용량"
+      },
+      "heat_value_previous": {
+        "name": "전월 난방 사용량"
+      },
+      "heat_avg": {
+        "name": "난방 단지 평균"
+      },
+      "heat_avg_previous": {
+        "name": "전월 난방 단지 평균"
+      },
+      "heat_price": {
+        "name": "난방 예상 요금"
+      },
+      "heat_price_previous": {
+        "name": "전월 난방 예상 요금"
+      },
+      "hotwater_value": {
+        "name": "온수 사용량"
+      },
+      "hotwater_value_previous": {
+        "name": "전월 온수 사용량"
+      },
+      "hotwater_avg": {
+        "name": "온수 단지 평균"
+      },
+      "hotwater_avg_previous": {
+        "name": "전월 온수 단지 평균"
+      },
+      "hotwater_price": {
+        "name": "온수 예상 요금"
+      },
+      "hotwater_price_previous": {
+        "name": "전월 온수 예상 요금"
+      },
+      "water_value": {
+        "name": "수도 사용량"
+      },
+      "water_value_previous": {
+        "name": "전월 수도 사용량"
+      },
+      "water_avg": {
+        "name": "수도 단지 평균"
+      },
+      "water_avg_previous": {
+        "name": "전월 수도 단지 평균"
+      },
+      "water_price": {
+        "name": "수도 예상 요금"
+      },
+      "water_price_previous": {
+        "name": "전월 수도 예상 요금"
+      }
+    }
+  }
+}

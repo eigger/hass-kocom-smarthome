@@ -1,0 +1,142 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Enter the mobile phone number registered on the wallpad, 11 digits without hyphens.",
+        "data": {
+          "phone_number": "Mobile phone number"
+        }
+      },
+      "wallpad": {
+        "title": "Wallpad authentication",
+        "description": "Enter the 8-digit code shown on the wallpad or video phone screen. The code expires after a short time, so enter it promptly.",
+        "data": {
+          "wallpad_number": "Authentication code"
+        }
+      },
+      "options": {
+        "title": "Options",
+        "description": "Metering data is updated once a day, so a short interval gains nothing and only adds load on the apartment server.",
+        "data": {
+          "energy_interval": "Energy scan interval (hours)"
+        }
+      }
+    },
+    "error": {
+      "network_error": "Failed to reach the KOCOM server",
+      "auth_failed": "The server rejected the login",
+      "invalid_phone_number": "Invalid phone number",
+      "invalid_auth_number": "The authentication code must be 8 digits",
+      "wallpad_auth_failure": "Wallpad authentication failed"
+    },
+    "abort": {
+      "already_configured": "This household is already set up",
+      "cannot_connect": "Failed to reach the KOCOM server",
+      "registration_failed": "The wallpad accepted the code but no registration appeared"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options",
+        "data": {
+          "energy_interval": "Energy scan interval (hours)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "elec_value": {
+        "name": "Electricity usage"
+      },
+      "elec_value_previous": {
+        "name": "Electricity usage (previous month)"
+      },
+      "elec_avg": {
+        "name": "Electricity complex average"
+      },
+      "elec_avg_previous": {
+        "name": "Electricity complex average (previous month)"
+      },
+      "elec_price": {
+        "name": "Electricity estimated cost"
+      },
+      "elec_price_previous": {
+        "name": "Electricity estimated cost (previous month)"
+      },
+      "gas_value": {
+        "name": "Gas usage"
+      },
+      "gas_value_previous": {
+        "name": "Gas usage (previous month)"
+      },
+      "gas_avg": {
+        "name": "Gas complex average"
+      },
+      "gas_avg_previous": {
+        "name": "Gas complex average (previous month)"
+      },
+      "gas_price": {
+        "name": "Gas estimated cost"
+      },
+      "gas_price_previous": {
+        "name": "Gas estimated cost (previous month)"
+      },
+      "heat_value": {
+        "name": "Heating usage"
+      },
+      "heat_value_previous": {
+        "name": "Heating usage (previous month)"
+      },
+      "heat_avg": {
+        "name": "Heating complex average"
+      },
+      "heat_avg_previous": {
+        "name": "Heating complex average (previous month)"
+      },
+      "heat_price": {
+        "name": "Heating estimated cost"
+      },
+      "heat_price_previous": {
+        "name": "Heating estimated cost (previous month)"
+      },
+      "hotwater_value": {
+        "name": "Hot water usage"
+      },
+      "hotwater_value_previous": {
+        "name": "Hot water usage (previous month)"
+      },
+      "hotwater_avg": {
+        "name": "Hot water complex average"
+      },
+      "hotwater_avg_previous": {
+        "name": "Hot water complex average (previous month)"
+      },
+      "hotwater_price": {
+        "name": "Hot water estimated cost"
+      },
+      "hotwater_price_previous": {
+        "name": "Hot water estimated cost (previous month)"
+      },
+      "water_value": {
+        "name": "Water usage"
+      },
+      "water_value_previous": {
+        "name": "Water usage (previous month)"
+      },
+      "water_avg": {
+        "name": "Water complex average"
+      },
+      "water_avg_previous": {
+        "name": "Water complex average (previous month)"
+      },
+      "water_price": {
+        "name": "Water estimated cost"
+      },
+      "water_price_previous": {
+        "name": "Water estimated cost (previous month)"
+      }
+    }
+  }
+}
