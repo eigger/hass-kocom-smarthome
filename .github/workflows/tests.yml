@@ -72,9 +72,15 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Install that Home Assistant version
+        # homeassistant==2025.8.0 pins aiodns==3.5.0, which requires
+        # pycares>=4.9.0 with no upper bound. pycares 5.0 renamed the type
+        # aiodns 3.5.0 imports at module load (ares_query_a_result), so an
+        # unconstrained install breaks on aiodns's very first import
+        # regardless of anything in this repo. Pin pycares to the 4.x line
+        # aiodns 3.5.0 was actually built against.
         run: |
           pip install --upgrade pip
-          pip install "homeassistant==${{ steps.min_ha.outputs.version }}" pytest pytest-asyncio aiohttp
+          pip install "homeassistant==${{ steps.min_ha.outputs.version }}" "pycares<5" pytest pytest-asyncio aiohttp
 
       - name: Run the tests that require Home Assistant
         # Exercises KocomClient end to end (digest challenge, auth retry,
