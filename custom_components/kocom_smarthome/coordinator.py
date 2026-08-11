@@ -50,9 +50,8 @@ class KocomEnergyCoordinator(DataUpdateCoordinator[ReadingsByKind]):
         self.pair = pair
         self.last_sync: datetime | None = None
 
-        # The previous implementation aimed at svrip; the app uses apiurl then
-        # apiip. Log all three once so a failure here is diagnosable without
-        # another round of guessing.
+        # Log all three host candidates once so a connection failure here is
+        # diagnosable without another round of guessing.
         LOGGER.debug(
             "Apartment server: using %s (apiurl=%s apiip=%s svrip=%s)",
             mask(pair.base_url, keep=0),

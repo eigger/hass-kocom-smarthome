@@ -44,6 +44,24 @@ class KocomResponseError(KocomError):
         self.message = message
 
 
+def _legacy_login_id(zone: int, ikod: int) -> str:
+    """The digest username the apartment server expects.
+
+    Not the evenly zero-padded ``Session.zone_id`` — the apartment server
+    keys accounts by this literal concatenation instead.
+    """
+    return f"00000{zone}00{ikod}"
+
+
+def _legacy_pair_id(zone: int, ikod: int) -> str:
+    """The path-scoping id the apartment server expects for a wallpad.
+
+    Not the evenly zero-padded ``Pair.zone_id`` — same story as
+    ``_legacy_login_id``.
+    """
+    return f"00{zone}0{ikod}"
+
+
 def dummy_push_token(phone_number: str) -> str:
     """A stand-in for the FCM registration token.
 
@@ -68,6 +86,7 @@ class KocomClient:
         username: str,
         password: str,
         payload: dict[str, Any] | None = None,
+        challenge_url: str | None = None,
     ) -> dict[str, Any]:
         """Send one request, answering a digest challenge if we get one.
 
@@ -75,6 +94,12 @@ class KocomClient:
         the 401 it draws carries a fresh nonce plus the session cookie it is
         bound to. That is one extra round trip per call, and in exchange there
         is no nonce expiry to manage.
+
+        ``challenge_url``, when given, is probed for the nonce instead of
+        ``url`` itself, and the real request is sent already signed. The
+        apartment server only answers a 401 challenge on the zone root; its
+        sub-paths (``energy/stdcheck``, ``control``, ...) answer an
+        unauthenticated request with a plain error body instead of a 401.
         """
         body = json.dumps(payload).encode() if payload is not None else None
         uri = urlsplit(url).path or "/"
@@ -82,17 +107,32 @@ class KocomClient:
             uri = f"{uri}?{query}"
 
         try:
-            async with self._session.request(
-                method, url, data=body, timeout=TIMEOUT
-            ) as response:
-                if response.status != 401:
-                    return self._decode(await response.text(), url)
-                challenge = parse_challenge(response.headers.get("WWW-Authenticate"))
-                cookie = response.headers.get("Set-Cookie", "").split(";")[0]
-                await response.read()
+            if challenge_url is None:
+                async with self._session.request(
+                    method, url, data=body, timeout=TIMEOUT
+                ) as response:
+                    if response.status != 401:
+                        return self._decode(await response.text(), url)
+                    challenge = parse_challenge(
+                        response.headers.get("WWW-Authenticate")
+                    )
+                    cookie = response.headers.get("Set-Cookie", "").split(";")[0]
+                    await response.read()
+            else:
+                async with self._session.request(
+                    "GET", challenge_url, timeout=TIMEOUT
+                ) as response:
+                    challenge = parse_challenge(
+                        response.headers.get("WWW-Authenticate")
+                    )
+                    cookie = response.headers.get("Set-Cookie", "").split(";")[0]
+                    await response.read()
 
             if not (nonce := challenge.get("nonce")):
-                raise KocomAuthError(f"No digest nonce in the challenge from {uri}")
+                raise KocomAuthError(
+                    f"No digest nonce in the challenge from "
+                    f"{challenge_url or uri}"
+                )
 
             headers = {
                 "Authorization": build_header(
@@ -100,7 +140,7 @@ class KocomClient:
                     password,
                     method,
                     uri,
-                    challenge.get("realm", DIGEST_REALM),
+                    DIGEST_REALM,
                     nonce,
                 )
             }
@@ -178,13 +218,22 @@ class KocomClient:
         method: str = "GET",
         payload: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        """Call a path on the apartment server for a paired wallpad."""
+        """Call a path on the apartment server for a paired wallpad.
+
+        The digest is signed with the caller's login identity, and the nonce
+        is drawn from the zone root (``/api/{zone_id}``) rather than the
+        sub-path being called: the apartment server does not answer an
+        unauthenticated sub-path request with a 401 challenge.
+        """
+        zone_id = _legacy_pair_id(pair.zone, pair.ikod)
+        base = f"{pair.base_url}/api/{zone_id}"
         return await self._request(
             method,
-            pair.url_for(path),
-            pair.zone_id,
+            f"{base}/{path}",
+            _legacy_login_id(session.zone, session.ikod),
             session.password,
             payload,
+            challenge_url=base,
         )
 
     # --- Branch server ----------------------------------------------------
