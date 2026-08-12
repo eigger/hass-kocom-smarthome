@@ -25,6 +25,7 @@ from custom_components.kocom_smarthome.api import (
     KocomClient,
     KocomResponseError,
 )
+from custom_components.kocom_smarthome.const import mask
 from custom_components.kocom_smarthome.coordinator import KocomEnergyCoordinator
 from custom_components.kocom_smarthome.digest import build_header
 from custom_components.kocom_smarthome.models import EnergyReading
@@ -301,3 +302,34 @@ async def test_a_household_with_no_previous_month_history_survives_rollover(koco
     gas_reading = coordinator.reading_for("gas", previous=False)
     assert gas_reading is by_kind["gas"][True]
     assert gas_reading.energy == "gas"
+
+
+# --- log masking -------------------------------------------------------------
+#
+# coordinator.py logs the apartment server address with mask(pair.base_url,
+# keep=0) — "reveal nothing". Python's own str[-0:] slicing means -0 == 0, so
+# a naive "*" * (len - keep) + text[-keep:] silently returns the *entire*
+# original string when keep=0, defeating the mask in exactly the call site
+# that most needs it. Caught during live testing; pinned here so it cannot
+# regress silently again.
+
+
+def test_mask_keeps_the_last_few_characters_by_default():
+    assert mask("01012345678") == "*******5678"
+
+
+def test_mask_with_keep_zero_reveals_nothing():
+    assert mask("https://apt.example.com", keep=0) == "*" * len("https://apt.example.com")
+
+
+def test_mask_with_negative_keep_also_reveals_nothing():
+    assert mask("secret", keep=-1) == "******"
+
+
+def test_mask_never_reveals_more_than_the_input_has():
+    assert mask("ab", keep=4) == "**"
+
+
+def test_mask_of_empty_string_is_empty():
+    assert mask("", keep=0) == ""
+    assert mask("") == ""
