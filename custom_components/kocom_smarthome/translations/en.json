@@ -20,6 +20,10 @@
         "data": {
           "energy_interval": "Energy scan interval (hours)"
         }
+      },
+      "reauth_confirm": {
+        "title": "Refresh KOCOM authentication",
+        "description": "Sign in again with the saved phone number. If wallpad pairing was removed, remove the integration and add it again."
       }
     },
     "error": {
@@ -32,7 +36,9 @@
     "abort": {
       "already_configured": "This household is already set up",
       "cannot_connect": "Failed to reach the KOCOM server",
-      "registration_failed": "The wallpad accepted the code but no registration appeared"
+      "registration_failed": "The wallpad accepted the code but no registration appeared",
+      "reauth_successful": "Authentication refreshed successfully.",
+      "unique_id_mismatch": "The account belongs to a different household. Remove the integration and add it again."
     }
   },
   "options": {

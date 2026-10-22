@@ -146,7 +146,11 @@ def test_reading_measure_lookup():
     reading = EnergyReading.parse(
         {"energy": "gas", "date": "2026-08", "value": 1, "avg": 2, "price": 3}
     )
-    assert (reading.measure("value"), reading.measure("avg"), reading.measure("price")) == (
+    assert (
+        reading.measure("value"),
+        reading.measure("avg"),
+        reading.measure("price"),
+    ) == (
         1.0,
         2.0,
         3.0,
@@ -228,13 +232,20 @@ def test_only_the_measures_the_server_sent_get_sensors():
 def test_a_row_with_only_a_household_figure_makes_one_sensor():
     data = readings(("gas", "202608", "202608"), measures={"value": 1.0})
     specs = build_specs(data, KINDS)
-    assert [(s.energy, s.measure, s.previous) for s in specs] == [("gas", "value", False)]
+    assert [(s.energy, s.measure, s.previous) for s in specs] == [
+        ("gas", "value", False)
+    ]
 
 
 def test_a_null_measure_still_counts_as_present():
     """The key being there means the server reports it, just not this month."""
-    data = readings(("elec", "202608", "202608"), measures={"value": 1.0, "price": None})
-    assert sorted(spec.measure for spec in build_specs(data, KINDS)) == ["price", "value"]
+    data = readings(
+        ("elec", "202608", "202608"), measures={"value": 1.0, "price": None}
+    )
+    assert sorted(spec.measure for spec in build_specs(data, KINDS)) == [
+        "price",
+        "value",
+    ]
 
 
 def test_the_filled_current_month_inherits_the_previous_row_measures():

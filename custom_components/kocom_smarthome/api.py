@@ -39,9 +39,13 @@ class KocomResponseError(KocomError):
     """The server answered with an ``error`` payload."""
 
     def __init__(self, code: int | None, message: str) -> None:
-        super().__init__(f"{message} ({code})" if code is not None else message)
+        super().__init__(
+            f"Server rejected the request (code {code})"
+            if isinstance(code, int)
+            else "Server rejected the request"
+        )
         self.code = code
-        self.message = message
+        self.message = str(self)
 
 
 def _legacy_login_id(zone: int, ikod: int) -> str:
@@ -129,10 +133,7 @@ class KocomClient:
                     await response.read()
 
             if not (nonce := challenge.get("nonce")):
-                raise KocomAuthError(
-                    f"No digest nonce in the challenge from "
-                    f"{challenge_url or uri}"
-                )
+                raise KocomAuthError("The server did not provide a digest challenge")
 
             headers = {
                 "Authorization": build_header(
@@ -153,14 +154,13 @@ class KocomClient:
                 text = await response.text()
                 if response.status in (401, 403):
                     raise KocomAuthError(
-                        f"Digest authentication rejected for {uri} "
-                        f"(HTTP {response.status})"
+                        f"Digest authentication rejected (HTTP {response.status})"
                     )
                 return self._decode(text, url)
-        except aiohttp.ClientError as err:
-            raise KocomError(f"Request to {uri} failed: {err}") from err
-        except TimeoutError as err:
-            raise KocomError(f"Request to {uri} timed out") from err
+        except aiohttp.ClientError:
+            raise KocomError("KOCOM connection failed") from None
+        except TimeoutError:
+            raise KocomError("KOCOM request timed out") from None
 
     @staticmethod
     def _decode(text: str, url: str) -> dict[str, Any]:
@@ -172,18 +172,16 @@ class KocomClient:
         """
         try:
             payload = json.loads(text)
-        except ValueError as err:
-            raise KocomError(
-                f"Expected JSON from {urlsplit(url).path}, got {text[:80]!r}"
-            ) from err
+        except ValueError:
+            raise KocomError("The server returned invalid JSON") from None
 
         if not isinstance(payload, dict):
-            raise KocomError(f"Expected a JSON object from {urlsplit(url).path}")
+            raise KocomError("The server did not return a JSON object")
 
         if (code := payload.get("error")) is not None:
             message = str(payload.get("error-msg") or "Unknown error")
             if code in (401, 403):
-                raise KocomAuthError(message)
+                raise KocomAuthError(f"Authentication rejected (code {code})")
             raise KocomResponseError(code, message)
 
         return payload
@@ -268,8 +266,8 @@ class KocomClient:
             LOGGER.debug("sphone accepted ikod %s", ikod)
             try:
                 return Session.parse(response)
-            except (KeyError, TypeError, ValueError) as err:
-                raise KocomError(f"Unexpected sphone response: {err}") from err
+            except (KeyError, TypeError, ValueError):
+                raise KocomError("The login response has invalid fields") from None
 
         raise last_error or KocomAuthError("sphone login failed")
 
@@ -285,7 +283,9 @@ class KocomClient:
             try:
                 pairs.append(Pair.parse(entry))
             except (KeyError, TypeError, ValueError) as err:
-                LOGGER.warning("Skipping malformed pairlist entry: %s", err)
+                LOGGER.warning(
+                    "Skipping malformed pairlist entry (%s)", type(err).__name__
+                )
         return pairs
 
     async def register_wallpad(self, session: Session, wallpad_number: str) -> None:
@@ -309,9 +309,7 @@ class KocomClient:
             month,
             mask(urlsplit(pair.base_url).netloc, keep=0),
         )
-        response = await self.zone_request(
-            session, pair, f"energy/stdcheck/{month}"
-        )
+        response = await self.zone_request(session, pair, f"energy/stdcheck/{month}")
 
         entries = response.get("list") or []
         if not isinstance(entries, list):
@@ -322,5 +320,7 @@ class KocomClient:
             try:
                 readings.append(EnergyReading.parse(entry))
             except (KeyError, TypeError, ValueError) as err:
-                LOGGER.warning("Skipping malformed energy entry: %s", err)
+                LOGGER.warning(
+                    "Skipping malformed energy entry (%s)", type(err).__name__
+                )
         return readings

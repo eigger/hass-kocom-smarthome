@@ -20,6 +20,10 @@
         "data": {
           "energy_interval": "에너지 스캔 간격 (시)"
         }
+      },
+      "reauth_confirm": {
+        "title": "코콤 인증 갱신",
+        "description": "저장된 휴대전화 번호로 다시 로그인합니다. 월패드 등록이 해제되었다면 통합을 삭제하고 다시 추가하세요."
       }
     },
     "error": {
@@ -32,7 +36,9 @@
     "abort": {
       "already_configured": "이미 등록된 세대입니다",
       "cannot_connect": "코콤 서버에 연결하지 못했습니다",
-      "registration_failed": "인증은 되었으나 등록된 월패드를 찾지 못했습니다"
+      "registration_failed": "인증은 되었으나 등록된 월패드를 찾지 못했습니다",
+      "reauth_successful": "인증을 갱신했습니다.",
+      "unique_id_mismatch": "다른 세대의 계정입니다. 통합을 삭제하고 다시 추가하세요."
     }
   },
   "options": {

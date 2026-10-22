@@ -29,8 +29,7 @@ async def async_setup_entry(
     specs = build_specs(data.energy.data or {}, ENERGY_META)
     LOGGER.debug("Creating %d energy sensors", len(specs))
     async_add_entities(
-        KocomEnergySensor(data.energy, data.pair, spec, phone_number)
-        for spec in specs
+        KocomEnergySensor(data.energy, data.pair, spec, phone_number) for spec in specs
     )
 
 

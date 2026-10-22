@@ -1,0 +1,41 @@
+{
+  "repository": "eigger/hass-kocom-smarthome",
+  "default_branch": "main",
+  "readmes": [
+    "README.md",
+    "README.ko.md"
+  ],
+  "hacs": "custom",
+  "release": true,
+  "installation_link": "#installation",
+  "hacs_default_evidence": "",
+  "tests_workflow": "tests.yml",
+  "validate_workflow": "validate.yml",
+  "installation_links": {
+    "README.md": "#installation",
+    "README.ko.md": "#설치"
+  },
+  "readme": {
+    "title": "KOCOM Smart Home+ Energy (hass-kocom-smarthome)",
+    "descriptions": {
+      "en": "A Home Assistant custom integration that connects to a KOCOM Smart Home+ wallpad to retrieve household energy metering data.",
+      "ko": "**코콤 스마트홈+** 월패드에 연결해 세대 **에너지 검침 정보**를 가져오는 Home Assistant 커스텀 통합구성요소입니다."
+    },
+    "issues": true,
+    "discussions": true,
+    "license_name": "MIT License",
+    "license_notices": {
+      "en": [],
+      "ko": []
+    },
+    "related_projects": []
+  },
+  "exceptions": [],
+  "categories_review": {
+    "value": [
+      "energy.meters_monitoring"
+    ],
+    "integration_type": "hub",
+    "source": "Reviewed by docs implementation on 2026-10-22: README metering-only scope and custom_components/kocom_smarthome/{coordinator,sensor,models}.py expose household electricity, heating, hot water, gas and water readings, apartment averages and estimated charges from a wallpad/apartment server. Primary category energy.meters_monitoring matches the actual meter-monitoring purpose; lighting/outlet/heating control is unsupported. Taxonomy: hass-repo-standards/scripts/standards/integration_categories.json at 0ec31111a81b0ee5702f1d8a17f03616a10a5db6. No secondary category needed."
+  }
+}

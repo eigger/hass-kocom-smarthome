@@ -21,7 +21,9 @@ def parse_challenge(header: str | None) -> dict[str, str]:
     if not header or not header.lstrip().lower().startswith("digest"):
         return {}
     body = header.lstrip()[len("digest") :]
-    return {m.group(1).lower(): m.group(2) or m.group(3) for m in _PARAM_RE.finditer(body)}
+    return {
+        m.group(1).lower(): m.group(2) or m.group(3) for m in _PARAM_RE.finditer(body)
+    }
 
 
 def _md5(value: str) -> str:
