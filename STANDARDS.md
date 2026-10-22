@@ -7,7 +7,7 @@
 - 적용 점검표: [ADOPTION_CHECKLIST.md](ADOPTION_CHECKLIST.md)
 - 중앙 현황표: https://github.com/eigger/hass-repo-standards/blob/main/docs/adoption-status.md
 - 조율 / 구현 / 독립 리뷰·검증: root(kocom-20261022) / tests_ci, docs / independent_review
-- 중앙 현황 갱신일: 2026-10-22, 로컬 중앙 checkout의 이 리포 행만 갱신; 원격 반영은 체크리스트 참조
+- 중앙 현황 갱신일: 2026-10-22, 중앙 원격 d317976에 자기 행 갱신; 최종 검증·배포 마감은 중앙 현황표/체크리스트 참조
 - 실제 기본 브랜치: `main` (`gh repo view` 확인); branch protection 없음 (API 404)
 - 검토 시작 통합 커밋: `34f6704`
 - 테스트 경로: `tests/components/kocom_smarthome/`
@@ -29,3 +29,7 @@
 ## 적용 영향
 
 공용 SHA 고정 CI, 실제 HA 테스트 기반, 양언어 README와 HACS 설치 링크를 채택합니다. 중앙 AGENTS.md는 이 리포에 설치하지 않습니다. 인증 오류 및 민감 정보 처리에서 발견한 문제는 회귀 테스트와 함께 보완합니다. 실제 환경·원격 CI·독립 검증 결과는 체크리스트에 구분합니다. 실물 월패드/단지 서버/HA UI는 이번 자동 검증에 포함하지 않습니다.
+
+## 검증과 배포
+
+[PR #2](https://github.com/eigger/hass-kocom-smarthome/pull/2)를 main `04f23dfb6fe09b0dc673a97b38a9065a4dc47930`에 반영하고, 동일 커밋의 모든 원격 Tests/Validate 성공을 독립 확인한 후 [v1.0.1](https://github.com/eigger/hass-kocom-smarthome/releases/tag/v1.0.1)을 정식 배포했습니다. tag와 manifest.version 일치를 API로 확인했습니다. 양환경 각109passed/skip0·pipcheck, HACS10checks·Hassfest Invalid0 및 중앙/Ruff 검사가 성공했습니다. 세부 환경·CI 링크·독립 리뷰와 미검증 범위는 체크리스트에 기록합니다.
