@@ -21,7 +21,7 @@ def test_parses_unquoted_and_spaced_parameters():
     assert parsed["stale"] == "FALSE"
 
 
-@pytest.mark.parametrize("header", [None, "", "Basic realm=\"kbranch\""])
+@pytest.mark.parametrize("header", [None, "", 'Basic realm="kbranch"'])
 def test_ignores_anything_that_is_not_a_digest_challenge(header):
     assert parse_challenge(header) == {}
 

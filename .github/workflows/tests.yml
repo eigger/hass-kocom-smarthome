@@ -1,90 +1,36 @@
+# Shared standards; upstream action SHAs verified 2026-10-17.
 name: Tests
-
-on:
+'on':
   push:
-    branches: [main, master]
-  pull_request:
-
+    branches:
+    - main
+  pull_request: null
+  workflow_dispatch: null
+permissions:
+  contents: read
 concurrency:
-  group: tests-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
+# Test current HA and the exact existing minimum in separate environments.
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-
-      - name: Install ruff
-        run: pip install ruff
-
-      - name: Lint
-        run: python -m ruff check custom_components/
-
-  test:
-    runs-on: ubuntu-latest
-    needs: lint
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.12", "3.13", "3.14"]
-
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install pytest pytest-asyncio aiohttp voluptuous
-
-      - name: Run tests
-        # test_ha_integration.py imports api.py, which imports const.py, which
-        # imports Home Assistant itself — real HA doesn't support Python 3.12,
-        # so that file is excluded here and covered by test-min-ha below
-        # instead.
-        run: python -m pytest tests/ -v --ignore=tests/test_ha_integration.py
-
-  test-min-ha:
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.13"
-
-      - name: Read the minimum supported Home Assistant version from hacs.json
-        id: min_ha
-        run: |
-          version=$(python -c "import json; print(json.load(open('hacs.json'))['homeassistant'])")
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-
-      - name: Install that Home Assistant version
-        # homeassistant==2025.8.0 pins aiodns==3.5.0, which requires
-        # pycares>=4.9.0 with no upper bound. pycares 5.0 renamed the type
-        # aiodns 3.5.0 imports at module load (ares_query_a_result), so an
-        # unconstrained install breaks on aiodns's very first import
-        # regardless of anything in this repo. Pin pycares to the 4.x line
-        # aiodns 3.5.0 was actually built against.
-        run: |
-          pip install --upgrade pip
-          pip install "homeassistant==${{ steps.min_ha.outputs.version }}" "pycares<5" pytest pytest-asyncio aiohttp
-
-      - name: Run the tests that require Home Assistant
-        # Exercises KocomClient end to end (digest challenge, auth retry,
-        # ikod fallback, zoneid math, JSON parsing) against the oldest Home
-        # Assistant this integration claims to support, so a hacs.json bump
-        # that turns out to be wrong fails CI instead of a user's install.
-        run: python -m pytest tests/test_ha_integration.py -v
+  current:
+    uses: eigger/hass-repo-standards/.github/workflows/python-tests.yml@0ec31111a81b0ee5702f1d8a17f03616a10a5db6
+    with:
+      # Use the same reviewed standards SHA as the reusable workflow.
+      standards-ref: 0ec31111a81b0ee5702f1d8a17f03616a10a5db6
+      domain: kocom_smarthome
+      python-versions: '["3.14"]'
+      requirements: requirements_test.txt
+      expected-ha-version: '2026.10.2'
+      test-profile: ha
+      pytest-args: tests/components/kocom_smarthome/ -v
+  minimum-ha:
+    uses: eigger/hass-repo-standards/.github/workflows/python-tests.yml@0ec31111a81b0ee5702f1d8a17f03616a10a5db6
+    with:
+      standards-ref: 0ec31111a81b0ee5702f1d8a17f03616a10a5db6
+      domain: kocom_smarthome
+      python-versions: '["3.13"]'
+      requirements: requirements_test_min.txt
+      expected-ha-version: '2025.8.0'
+      test-profile: ha
+      pytest-args: tests/components/kocom_smarthome/ -v

@@ -1,0 +1,5 @@
+# Historical support environment; keep separate from current HA updates.
+homeassistant==2025.8.0
+pytest-homeassistant-custom-component==0.13.269
+# aiodns 3.5.0 uses APIs removed in pycares 5.
+pycares<5

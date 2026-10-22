@@ -46,8 +46,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: KocomConfigEntry) -> boo
             ikod=int(branch_zone_id[8:]),
             password=entry.data[CONF_PASSWORD],
         )
-    except (KeyError, TypeError, ValueError) as err:
-        raise ConfigEntryNotReady(f"Stored credentials are unusable: {err}") from err
+    except (KeyError, TypeError, ValueError):
+        raise ConfigEntryNotReady(
+            "Stored credentials are unusable; remove and add the integration again"
+        ) from None
 
     client = KocomClient(async_get_clientsession(hass))
     energy = KocomEnergyCoordinator(hass, entry, client, session, pair)
@@ -106,7 +108,9 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         pair = Pair.parse(pairing_info)
         branch_zone_id = zone_id(pairing_info["zone"], pairing_info["id"])
     except (KeyError, TypeError, ValueError) as err:
-        LOGGER.error("Cannot migrate this entry: %s", err)
+        LOGGER.error(
+            "Cannot migrate this entry: invalid stored fields (%s)", type(err).__name__
+        )
         return False
 
     hass.config_entries.async_update_entry(

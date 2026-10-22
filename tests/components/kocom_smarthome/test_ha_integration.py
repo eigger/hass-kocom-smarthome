@@ -1,16 +1,4 @@
-"""End-to-end check of KocomClient against a fake KOCOM server.
-
-Everything in tests/test_digest.py and tests/test_models.py is pure Python and
-needs no Home Assistant. This file imports custom_components.kocom_smarthome.api,
-which imports .const for its own HA-free constants (BRANCH_BASE_URL, timeouts,
-mask()) — but const.py also imports `SensorDeviceClass`/`SensorStateClass` at
-module level for ENERGY_META, so importing api.py at all requires Home
-Assistant to be installed regardless of whether api.py itself uses those
-names. Home Assistant is therefore a real, unavoidable dependency for this
-file specifically, which is why it is excluded from the fast matrix job and
-run only in the job pinned to the minimum supported Home Assistant version
-(see .github/workflows/tests.yml).
-"""
+"""HTTP protocol regression tests against a loopback KOCOM server."""
 
 import json
 
@@ -33,6 +21,12 @@ from custom_components.kocom_smarthome.models import EnergyReading
 # pytest.ini sets asyncio_mode = auto, so async def tests are picked up
 # without a marker — this file mixes them with plain sync tests below.
 
+# The protocol regression server binds loopback only.
+pytestmark = [
+    pytest.mark.usefixtures("socket_enabled"),
+    pytest.mark.allow_hosts(["127.0.0.1"]),
+]
+
 NONCE = "9d37def8022c1f432587c4a7586b1300"
 IKOD = "Android!1000002"
 MEMBERSHIP = "4990e9e16a532aa9010403b01e0ee52a"
@@ -53,7 +47,10 @@ def make_app(request_log, sphone_ikod=IKOD, session_password=SESSION_PW):
 
         accepted = [
             build_header(u, p, request.method, request.path, "kbranch", NONCE)
-            for u, p in ((sphone_ikod, MEMBERSHIP), ("0000013800100138", session_password))
+            for u, p in (
+                (sphone_ikod, MEMBERSHIP),
+                ("0000013800100138", session_password),
+            )
         ]
         if auth not in accepted:
             return web.Response(
@@ -98,10 +95,20 @@ def make_app(request_log, sphone_ikod=IKOD, session_password=SESSION_PW):
             payload = {
                 "cnt": 2,
                 "list": [
-                    {"date": "2026-08", "energy": "elec", "value": 123.4,
-                     "avg": 210.0, "price": 18500},
-                    {"date": "2026-07", "energy": "gas", "value": 12.3,
-                     "avg": 20.1, "price": 9800},
+                    {
+                        "date": "2026-08",
+                        "energy": "elec",
+                        "value": 123.4,
+                        "avg": 210.0,
+                        "price": 18500,
+                    },
+                    {
+                        "date": "2026-07",
+                        "energy": "gas",
+                        "value": 12.3,
+                        "avg": 20.1,
+                        "price": 9800,
+                    },
                 ],
             }
         else:
@@ -178,7 +185,7 @@ async def test_pairs_prefers_apiurl_but_the_fixture_has_none_so_falls_back(kocom
 async def test_register_wallpad_reports_the_servers_own_failure_message(kocom):
     client, _, _ = kocom
     session = await client.login(PHONE)
-    with pytest.raises(KocomResponseError, match="PairNum Fail"):
+    with pytest.raises(KocomResponseError, match="90"):
         await client.register_wallpad(session, "00000000")
 
 
@@ -193,8 +200,13 @@ async def test_energy_readings_round_trip_through_real_json(kocom):
     session = await client.login(PHONE)
     pair = (await client.pairs(session))[0]
     pair = type(pair)(
-        pair.idx, pair.zone, pair.ikod, pair.alias,
-        str(http_client.make_url("/")).rstrip("/"), pair.api_ip, pair.svr_ip,
+        pair.idx,
+        pair.zone,
+        pair.ikod,
+        pair.alias,
+        str(http_client.make_url("/")).rstrip("/"),
+        pair.api_ip,
+        pair.svr_ip,
     )
 
     readings = await client.energy_readings(session, pair, "202608")
@@ -284,8 +296,13 @@ async def test_a_household_with_no_previous_month_history_survives_rollover(koco
     session = await client.login(PHONE)
     pair = (await client.pairs(session))[0]
     pair = type(pair)(
-        pair.idx, pair.zone, pair.ikod, pair.alias,
-        str(http_client.make_url("/")).rstrip("/"), pair.api_ip, pair.svr_ip,
+        pair.idx,
+        pair.zone,
+        pair.ikod,
+        pair.alias,
+        str(http_client.make_url("/")).rstrip("/"),
+        pair.api_ip,
+        pair.svr_ip,
     )
 
     # energy/stdcheck/202608 in the fixture server answers with one row dated
@@ -295,7 +312,9 @@ async def test_a_household_with_no_previous_month_history_survives_rollover(koco
     readings = await client.energy_readings(session, pair, "202608")
     by_kind = {}
     for reading in readings:
-        by_kind.setdefault(reading.energy, {})[reading.is_previous_month("202608")] = reading
+        by_kind.setdefault(reading.energy, {})[reading.is_previous_month("202608")] = (
+            reading
+        )
 
     coordinator = _coordinator_with(by_kind)
     assert coordinator.reading_for("elec", previous=False) is by_kind["elec"][False]
@@ -319,7 +338,9 @@ def test_mask_keeps_the_last_few_characters_by_default():
 
 
 def test_mask_with_keep_zero_reveals_nothing():
-    assert mask("https://apt.example.com", keep=0) == "*" * len("https://apt.example.com")
+    assert mask("https://apt.example.com", keep=0) == "*" * len(
+        "https://apt.example.com"
+    )
 
 
 def test_mask_with_negative_keep_also_reveals_nothing():

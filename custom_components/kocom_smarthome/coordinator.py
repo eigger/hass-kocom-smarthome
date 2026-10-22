@@ -6,10 +6,11 @@ from datetime import datetime, timedelta
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
 
-from .api import KocomClient, KocomError
+from .api import KocomAuthError, KocomClient, KocomError
 from .const import (
     CONF_ENERGY_INTERVAL,
     DEFAULT_ENERGY_INTERVAL,
@@ -63,24 +64,25 @@ class KocomEnergyCoordinator(DataUpdateCoordinator[ReadingsByKind]):
     async def _async_update_data(self) -> ReadingsByKind:
         month = dt_util.now().strftime("%Y%m")
         try:
-            readings = await self.client.energy_readings(
-                self.session, self.pair, month
-            )
-        except KocomError as err:
-            raise UpdateFailed(str(err)) from err
+            readings = await self.client.energy_readings(self.session, self.pair, month)
+        except KocomAuthError:
+            raise ConfigEntryAuthFailed(
+                "KOCOM authentication failed; sign in again to refresh credentials"
+            ) from None
+        except KocomError:
+            raise UpdateFailed("KOCOM energy request failed") from None
 
         by_kind: ReadingsByKind = {}
         for reading in readings:
             if reading.energy not in ENERGY_META:
-                LOGGER.debug("Ignoring unknown energy kind %s", reading.energy)
+                LOGGER.debug("Ignoring an unsupported energy kind")
                 continue
             previous = reading.is_previous_month(month)
             by_kind.setdefault(reading.energy, {})[previous] = reading
 
         if not by_kind:
             raise UpdateFailed(
-                f"No usable metering rows for {month}; "
-                f"received {len(readings)} entries"
+                f"No usable metering rows for {month}; received {len(readings)} entries"
             )
 
         self.last_sync = dt_util.now()
