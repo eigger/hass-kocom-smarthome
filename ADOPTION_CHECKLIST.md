@@ -159,3 +159,10 @@ git diff --check
 - [정식 v1.0.1](https://github.com/eigger/hass-kocom-smarthome/releases/tag/v1.0.1): GitHub API로 draft=false/prerelease=false, tag commit04f23df와 해당 tag manifest.version1.0.1을 재확인.
 - [중앙 현황표](https://github.com/eigger/hass-repo-standards/blob/main/docs/adoption-status.md)의 이 리포 행에 마감 기록. 중앙의 다른 리포 행과 기존 로컬 수정은 보존.
 - 이 마감 문서는 검증·배포 증거만 갱신하며 배포된 production/test/workflow 파일을 변경하지 않습니다. 실물 월패드·단지 서버·HA UI 검증은 수행하지 않았습니다.
+
+
+## 2026-10-23 HACS ZIP and Downloads (scoped)
+
+- Target base: `8c62d619cc84bb7b2b3f262eeb207d37b1947564`; reviewed release central: `fd4162c0b93fbe8e109f99c787773ae09ba157e1`.
+- Scope: HACS-04/CI-11 release ZIP and DOC-03/05 Downloads replacing Analytics Usage. No release is created during this update.
+- Validation: pending badge/release contract checks, actionlint, actual local ZIP build and remote PR CI. Full adoption, device and real release upload are not asserted by this partial change.

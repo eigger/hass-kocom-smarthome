@@ -14,10 +14,10 @@ concurrency:
 # Test current HA and the exact existing minimum in separate environments.
 jobs:
   current:
-    uses: eigger/hass-repo-standards/.github/workflows/python-tests.yml@0ec31111a81b0ee5702f1d8a17f03616a10a5db6
+    uses: eigger/hass-repo-standards/.github/workflows/python-tests.yml@fd4162c0b93fbe8e109f99c787773ae09ba157e1
     with:
       # Use the same reviewed standards SHA as the reusable workflow.
-      standards-ref: 0ec31111a81b0ee5702f1d8a17f03616a10a5db6
+      standards-ref: fd4162c0b93fbe8e109f99c787773ae09ba157e1
       domain: kocom_smarthome
       python-versions: '["3.14"]'
       requirements: requirements_test.txt
@@ -25,9 +25,9 @@ jobs:
       test-profile: ha
       pytest-args: tests/components/kocom_smarthome/ -v
   minimum-ha:
-    uses: eigger/hass-repo-standards/.github/workflows/python-tests.yml@0ec31111a81b0ee5702f1d8a17f03616a10a5db6
+    uses: eigger/hass-repo-standards/.github/workflows/python-tests.yml@fd4162c0b93fbe8e109f99c787773ae09ba157e1
     with:
-      standards-ref: 0ec31111a81b0ee5702f1d8a17f03616a10a5db6
+      standards-ref: fd4162c0b93fbe8e109f99c787773ae09ba157e1
       domain: kocom_smarthome
       python-versions: '["3.13"]'
       requirements: requirements_test_min.txt
