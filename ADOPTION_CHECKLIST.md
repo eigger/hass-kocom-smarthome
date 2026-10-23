@@ -165,4 +165,8 @@ git diff --check
 
 - Target base: `8c62d619cc84bb7b2b3f262eeb207d37b1947564`; reviewed release central: `fd4162c0b93fbe8e109f99c787773ae09ba157e1`.
 - Scope: HACS-04/CI-11 release ZIP and DOC-03/05 Downloads replacing Analytics Usage. No release is created during this update.
-- Validation: pending badge/release contract checks, actionlint, actual local ZIP build and remote PR CI. Full adoption, device and real release upload are not asserted by this partial change.
+- Local scoped validation: PASS — canonical badge check, no Analytics Usage, release metadata/caller contract, actionlint 1.7.12, native git diff --check, unchanged tracked integration/manifest/dependencies/tests.
+- Actual archive build: PASS at `f1776395f91a5382d0f72a5d40514ad3dbeca847`; `kocom_smarthome.zip`, 18 files, SHA256 `5da0c078a40afe0d4056645e7ae9342b9e2d2f925c28e5dae4c4440ebf063a32`. All archive members matched checkout bytes; manifest.json and __init__.py are at ZIP root. Final documentation-only follow-up preserves this integration tree. Windows Python 3.14.6; validation WSL Python 3.14.4/PyYAML 6.0.3/packaging 26.0.
+- Full central integration checker: PASS.
+- Existing CI workflows are preserved, except hass-kocom-smarthome where matching reviewed central references are synchronized. Existing support minimum and prior exceptions remain.
+- Independent review and remote CI: tracked in this branch's pull request; merge requires resolved actionable findings and successful applicable checks. No real release upload, device or new real HA runtime validation is claimed by these local packaging checks.
