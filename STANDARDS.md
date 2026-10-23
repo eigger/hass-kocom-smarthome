@@ -1,7 +1,7 @@
 # 적용한 공통 규칙
 
-- 표준: https://github.com/eigger/hass-repo-standards/tree/0ec31111a81b0ee5702f1d8a17f03616a10a5db6
-- 참조 커밋 SHA: 0ec31111a81b0ee5702f1d8a17f03616a10a5db6
+- 표준: https://github.com/eigger/hass-repo-standards/tree/fd4162c0b93fbe8e109f99c787773ae09ba157e1
+- 참조 커밋 SHA: `fd4162c0b93fbe8e109f99c787773ae09ba157e1`
 - 채택 검토일: 2026-10-22
 - profile: integration / ha
 - 적용 점검표: [ADOPTION_CHECKLIST.md](ADOPTION_CHECKLIST.md)
@@ -33,3 +33,10 @@
 ## 검증과 배포
 
 [PR #2](https://github.com/eigger/hass-kocom-smarthome/pull/2)를 main `04f23dfb6fe09b0dc673a97b38a9065a4dc47930`에 반영하고, 동일 커밋의 모든 원격 Tests/Validate 성공을 독립 확인한 후 [v1.0.1](https://github.com/eigger/hass-kocom-smarthome/releases/tag/v1.0.1)을 정식 배포했습니다. tag와 manifest.version 일치를 API로 확인했습니다. 양환경 각109passed/skip0·pipcheck, HACS10checks·Hassfest Invalid0 및 중앙/Ruff 검사가 성공했습니다. 세부 환경·CI 링크·독립 리뷰와 미검증 범위는 체크리스트에 기록합니다.
+
+
+## 2026-10-23 ZIP release and Downloads update
+
+Base commit: `8c62d619cc84bb7b2b3f262eeb207d37b1947564`. HACS remains Custom. `hacs.json` now selects `kocom_smarthome.zip`; publishing the next release builds and attaches that integration ZIP through the pinned central action. Analytics Usage is replaced by Downloads. The archive contains tracked integration files at its root. No existing release/tag/assets are modified.
+
+Implementation and review: root; generated release caller reuses the independently reviewed central ZIP contract. Support minimum, manifest, code, dependencies, README body and prior adoption exceptions are preserved. Verification evidence is recorded in ADOPTION_CHECKLIST.md; this scoped update does not establish full standards compliance.
