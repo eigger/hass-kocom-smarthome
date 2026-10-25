@@ -29,7 +29,7 @@ python -m pip check
 
 ## 공용 검사와 의존성
 
-[공용 표준](https://github.com/eigger/hass-repo-standards/tree/0ec31111a81b0ee5702f1d8a17f03616a10a5db6)의 [Core 대응 구조](https://github.com/eigger/hass-repo-standards/blob/0ec31111a81b0ee5702f1d8a17f03616a10a5db6/docs/home-assistant.md), [실제 HA 테스트 구조](https://github.com/eigger/hass-repo-standards/blob/0ec31111a81b0ee5702f1d8a17f03616a10a5db6/docs/testing.md), [의존성 규칙](https://github.com/eigger/hass-repo-standards/blob/0ec31111a81b0ee5702f1d8a17f03616a10a5db6/docs/dependencies.md)을 따릅니다. 별도 Python 런타임 라이브러리 요구사항은 현재 없으며 HA 제공 라이브러리를 사용합니다. 새 런타임 의존성이 필요하면 manifest에 선언하고 호환 범위·최소/current 테스트를 함께 검토합니다. 테스트·린트 도구는 각각 requirements 파일에서 관리하며 과거 최소 환경의 자동 상향을 피합니다.
+[공용 표준](https://github.com/eigger/hass-repo-standards/tree/v1.0.0)의 [Core 대응 구조](https://github.com/eigger/hass-repo-standards/blob/v1.0.0/docs/home-assistant.md), [실제 HA 테스트 구조](https://github.com/eigger/hass-repo-standards/blob/v1.0.0/docs/testing.md), [의존성 규칙](https://github.com/eigger/hass-repo-standards/blob/v1.0.0/docs/dependencies.md)을 따릅니다. 별도 Python 런타임 라이브러리 요구사항은 현재 없으며 HA 제공 라이브러리를 사용합니다. 새 런타임 의존성이 필요하면 manifest에 선언하고 호환 범위·최소/current 테스트를 함께 검토합니다. 테스트·린트 도구는 각각 requirements 파일에서 관리하며 과거 최소 환경의 자동 상향을 피합니다.
 
 중앙 checkout이 인접한 경우 다음 명령으로 README 관리 영역·배지·테스트 및 CI 구조를 검사할 수 있습니다.
 
