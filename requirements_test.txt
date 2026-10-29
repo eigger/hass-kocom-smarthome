@@ -1,2 +1,2 @@
 # Current HA/plugin compatibility pair verified from PyPI metadata 2026-10-17.
-pytest-homeassistant-custom-component==0.13.373
+pytest-homeassistant-custom-component==0.13.375
