@@ -7,7 +7,7 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorStateClass,
 )
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import CONF_PHONE_NUMBER, ENERGY_META, LOGGER, PRICE_UNIT
@@ -25,12 +25,30 @@ async def async_setup_entry(
     """Set up sensors for a config entry."""
     data = entry.runtime_data
     phone_number = entry.data[CONF_PHONE_NUMBER]
+    known: set[SensorSpec] = set()
 
-    specs = build_specs(data.energy.data or {}, ENERGY_META)
-    LOGGER.debug("Creating %d energy sensors", len(specs))
-    async_add_entities(
-        KocomEnergySensor(data.energy, data.pair, spec, phone_number) for spec in specs
-    )
+    @callback
+    def _add_new_sensors() -> None:
+        # The first poll may have failed (the apartment server can be
+        # unreachable), so sensors are created whenever a response first
+        # names them rather than once at setup.
+        specs = [
+            spec
+            for spec in build_specs(data.energy.data or {}, ENERGY_META)
+            if spec not in known
+        ]
+        if not specs:
+            return
+        known.update(specs)
+        LOGGER.debug("Creating %d energy sensors", len(specs))
+        async_add_entities(
+            KocomEnergySensor(data.energy, data.pair, spec, phone_number)
+            for spec in specs
+        )
+
+    _add_new_sensors()
+    # The listener also keeps the coordinator polling while no entity exists yet.
+    entry.async_on_unload(data.energy.async_add_listener(_add_new_sensors))
 
 
 class KocomEnergySensor(KocomEntity, SensorEntity):
