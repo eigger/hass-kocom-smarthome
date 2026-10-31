@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 
 async def async_setup_entry(hass: HomeAssistant, entry: KocomConfigEntry) -> bool:
     """Set up a config entry."""
-    from homeassistant.exceptions import ConfigEntryNotReady
+    from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
     from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
     from .api import KocomClient
@@ -53,7 +53,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: KocomConfigEntry) -> boo
 
     client = KocomClient(async_get_clientsession(hass))
     energy = KocomEnergyCoordinator(hass, entry, client, session, pair)
-    await energy.async_config_entry_first_refresh()
+    # A failed first poll must not block setup: the coordinator keeps polling on
+    # its own interval and the sensors appear once the server answers.
+    await energy.async_refresh()
+    if isinstance(energy.last_exception, ConfigEntryAuthFailed):
+        raise energy.last_exception
 
     entry.runtime_data = KocomRuntimeData(
         client=client, session=session, pair=pair, energy=energy

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1
+
+- A failed first energy poll (for example an unreachable apartment server) no longer puts the entry into setup retry. The integration loads, retries every 5 minutes until the first success, then returns to the configured interval; sensors are created when the first response arrives.
+- Authentication failures during setup still start reauthentication.
+
 ## 1.0.1
 
 - Adopt shared repository standards and SHA-pinned validation/test workflows.
