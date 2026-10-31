@@ -21,6 +21,10 @@ from .const import (
 )
 from .models import EnergyReading, Pair, Session
 
+# How soon to try again while no poll has succeeded yet, so a brief outage at
+# startup does not leave the sensors missing for a whole polling interval.
+INITIAL_RETRY_INTERVAL = timedelta(minutes=5)
+
 type ReadingsByKind = dict[str, dict[bool, EnergyReading]]
 
 
@@ -39,12 +43,13 @@ class KocomEnergyCoordinator(DataUpdateCoordinator[ReadingsByKind]):
             CONF_ENERGY_INTERVAL,
             entry.data.get(CONF_ENERGY_INTERVAL, DEFAULT_ENERGY_INTERVAL),
         )
+        self._poll_interval = timedelta(hours=interval)
         super().__init__(
             hass,
             LOGGER,
             config_entry=entry,
             name=DOMAIN,
-            update_interval=timedelta(hours=interval),
+            update_interval=self._poll_interval,
         )
         self.client = client
         self.session = session
@@ -62,6 +67,16 @@ class KocomEnergyCoordinator(DataUpdateCoordinator[ReadingsByKind]):
         )
 
     async def _async_update_data(self) -> ReadingsByKind:
+        try:
+            data = await self._fetch()
+        except UpdateFailed:
+            if self.data is None:
+                self.update_interval = min(INITIAL_RETRY_INTERVAL, self._poll_interval)
+            raise
+        self.update_interval = self._poll_interval
+        return data
+
+    async def _fetch(self) -> ReadingsByKind:
         month = dt_util.now().strftime("%Y%m")
         try:
             readings = await self.client.energy_readings(self.session, self.pair, month)
