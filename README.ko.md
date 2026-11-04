@@ -16,6 +16,8 @@
 <!-- hass-standards:badges:end -->
 <!-- hass-standards:header:end -->
 
+![Kocom](custom_components/kocom_smarthome/brand/logo.png)
+
 - 휴대전화 번호로 월패드와 페어링하면, 단지 서버에서 **월간 검침 데이터**를 주기적으로 조회합니다.
 - 전기·난방·온수·가스·수도 각각에 대해 **우리집 사용량 / 이번달 단지 평균 / 예상 요금** 센서가 생성됩니다.
 - 조명·콘센트·난방 제어 기능은 **아직** 포함하지 않습니다. 현재는 에너지 검침만 지원합니다.
