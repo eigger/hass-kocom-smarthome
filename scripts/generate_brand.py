@@ -1,11 +1,11 @@
 """Generate Home Assistant brand images for Kocom Smart Home+ Energy.
 
 The artwork is an original geometric brand mark on a dark navy rounded square:
-a cyan and white smart wallpad screen displaying a golden energy lightning bolt
-and meter bars, paired with wireless signal arcs. It does not reuse any
-manufacturer trademark. Drawn from geometric primitives at 4x scale and
-downsampled, so no source image, external font file, or network access is
-needed. Run with Pillow 12.3.0 for reproducible PNGs.
+a centered cyan and white smart wallpad screen displaying a golden energy
+lightning bolt and meter bars. It does not reuse any manufacturer trademark.
+Drawn from geometric primitives at 4x scale and downsampled, so no source image,
+external font file, or network access is needed. Run with Pillow 12.3.0 for
+reproducible PNGs.
 """
 
 from __future__ import annotations
@@ -82,37 +82,6 @@ def _rounded_polygon(
     return poly_pts
 
 
-def _draw_arc_ring(
-    d: ImageDraw.ImageDraw,
-    cx: float,
-    cy: float,
-    r_in: float,
-    r_out: float,
-    deg_start: float,
-    deg_end: float,
-    fill: str,
-) -> None:
-    """Draw a smooth annular sector."""
-    steps = 48
-    a0 = math.radians(deg_start)
-    a1 = math.radians(deg_end)
-    pts_out = [
-        (
-            cx + r_out * math.cos(a0 + (a1 - a0) * i / steps),
-            cy + r_out * math.sin(a0 + (a1 - a0) * i / steps),
-        )
-        for i in range(steps + 1)
-    ]
-    pts_in = [
-        (
-            cx + r_in * math.cos(a0 + (a1 - a0) * i / steps),
-            cy + r_in * math.sin(a0 + (a1 - a0) * i / steps),
-        )
-        for i in range(steps + 1)
-    ]
-    d.polygon(pts_out + list(reversed(pts_in)), fill=fill)
-
-
 def draw_icon() -> Image.Image:
     """Draw the 512px RGBA app icon."""
     s = SCALE
@@ -125,41 +94,31 @@ def draw_icon() -> Image.Image:
     # 1. Dark navy rounded square background.
     d.rounded_rectangle(box(0, 0, SIZE - 1, SIZE - 1), radius=104 * s, fill=NAVY)
 
-    # 2. Smart Wallpad outer body (white) and cyan screen bezel.
-    d.rounded_rectangle(box(76, 84, 396, 436), radius=44 * s, fill=WHITE)
-    d.rounded_rectangle(box(102, 110, 370, 374), radius=26 * s, fill=CYAN)
-    d.rounded_rectangle(box(118, 126, 354, 358), radius=18 * s, fill=NAVY)
+    # 2. Centered Smart Wallpad outer body (white) and cyan screen bezel.
+    d.rounded_rectangle(box(88, 76, 424, 436), radius=44 * s, fill=WHITE)
+    d.rounded_rectangle(box(114, 102, 398, 372), radius=26 * s, fill=CYAN)
+    d.rounded_rectangle(box(130, 118, 382, 356), radius=18 * s, fill=NAVY)
 
     # Wallpad touch home button at bottom center of the white frame.
-    d.ellipse(box(218, 388, 254, 424), fill=NAVY)
-    d.ellipse(box(226, 396, 246, 416), fill=CYAN)
+    d.ellipse(box(238, 386, 274, 422), fill=NAVY)
+    d.ellipse(box(246, 394, 266, 414), fill=CYAN)
 
-    # 3. Golden Energy Lightning Bolt on the left/center of the wallpad screen.
+    # 3. Golden Energy Lightning Bolt inside the wallpad screen.
     bolt_pts = [
-        (234 * s, 148 * s),
-        (150 * s, 252 * s),
-        (206 * s, 252 * s),
-        (182 * s, 338 * s),
-        (274 * s, 228 * s),
-        (218 * s, 228 * s),
+        (250 * s, 142 * s),
+        (164 * s, 246 * s),
+        (220 * s, 246 * s),
+        (196 * s, 334 * s),
+        (290 * s, 224 * s),
+        (234 * s, 224 * s),
     ]
     d.polygon(_rounded_polygon(bolt_pts, 6 * s), fill=YELLOW)
 
     # 4. Utility meter bars (electricity/gas/water/heat) on the right side of the screen.
-    d.rounded_rectangle(box(286, 166, 330, 186), radius=6 * s, fill=GOLD)
-    d.rounded_rectangle(box(286, 204, 330, 224), radius=6 * s, fill=CYAN)
-    d.rounded_rectangle(box(286, 242, 330, 262), radius=6 * s, fill=GREEN)
-    d.rounded_rectangle(box(286, 280, 330, 300), radius=6 * s, fill=WHITE)
-
-    # 5. Golden smart-home wireless signal arcs at the top-right with navy knockout.
-    acx, acy = 374 * s, 110 * s
-    d.ellipse([acx - 28 * s, acy - 28 * s, acx + 28 * s, acy + 28 * s], fill=NAVY)
-    d.ellipse([acx - 16 * s, acy - 16 * s, acx + 16 * s, acy + 16 * s], fill=GOLD)
-    for r_in, r_out, col in (
-        (32 * s, 46 * s, YELLOW),
-        (58 * s, 72 * s, GOLD),
-    ):
-        _draw_arc_ring(d, acx, acy, r_in, r_out, -72, 16, fill=col)
+    d.rounded_rectangle(box(306, 160, 354, 180), radius=6 * s, fill=GOLD)
+    d.rounded_rectangle(box(306, 198, 354, 218), radius=6 * s, fill=CYAN)
+    d.rounded_rectangle(box(306, 236, 354, 256), radius=6 * s, fill=GREEN)
+    d.rounded_rectangle(box(306, 274, 354, 294), radius=6 * s, fill=WHITE)
 
     return image.resize((SIZE, SIZE), Image.Resampling.LANCZOS)
 
