@@ -1,5 +1,5 @@
 <!-- hass-standards:header:start -->
-# KOCOM Smart Home+ Energy (hass-kocom-smarthome)
+# KOCOM Smart Home+ Energy for Home Assistant
 
 A Home Assistant custom integration that connects to a KOCOM Smart Home+ wallpad to retrieve household energy metering data.
 
@@ -55,18 +55,24 @@ The integration then keeps sensors available using **previous-month data**.
 
 Each sensor exposes `Registration Date` (the metering year and month) and `Sync date` (the last retrieval time) as attributes.
 
+## Requirements
+
+- **Home Assistant:** 2025.8.0 or later.
+- **Wallpad:** A KOCOM Smart Home+ wallpad with household energy metering.
+
 ## Installation
 
 <!-- hass-standards:installation:start -->
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=eigger&repository=hass-kocom-smarthome&category=integration)
 <!-- hass-standards:installation:end -->
 
-Requires Home Assistant 2025.8.0 or later. The badge opens the repository in an instance with HACS already installed; complete the download and restart steps below. For a custom repository, select the **Integration** category.
+1. Click the badge above to open the repository in Marketplace.
+2. If you need to add it yourself, go to **Settings → Marketplace → Add from link** and enter <https://github.com/eigger/hass-kocom-smarthome>. Connect GitHub if prompted.
+3. Select **Install**. Restart Home Assistant if prompted, then continue to [Configuration](#configuration).
 
-1. Add this repository as a custom repository in HACS, or copy `custom_components/kocom_smarthome`
-   into `custom_components/` in your Home Assistant configuration directory.
-2. Restart Home Assistant.
-3. Select **Settings → Devices & services → Add integration → "코콤 스마트홈+ (에너지)"**.
+## Configuration
+
+Select **Settings → Devices & services → Add integration → 코콤 스마트홈+ (에너지)**.
 
 ### Prerequisites
 

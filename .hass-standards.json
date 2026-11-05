@@ -21,7 +21,7 @@
     "README.ko.md": "#설치"
   },
   "readme": {
-    "title": "KOCOM Smart Home+ Energy (hass-kocom-smarthome)",
+    "title": "KOCOM Smart Home+ Energy for Home Assistant",
     "descriptions": {
       "en": "A Home Assistant custom integration that connects to a KOCOM Smart Home+ wallpad to retrieve household energy metering data.",
       "ko": "**코콤 스마트홈+** 월패드에 연결해 세대 **에너지 검침 정보**를 가져오는 Home Assistant 커스텀 통합구성요소입니다."

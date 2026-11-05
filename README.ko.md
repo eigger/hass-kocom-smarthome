@@ -1,5 +1,5 @@
 <!-- hass-standards:header:start -->
-# KOCOM Smart Home+ Energy (hass-kocom-smarthome)
+# KOCOM Smart Home+ Energy for Home Assistant
 
 **코콤 스마트홈+** 월패드에 연결해 세대 **에너지 검침 정보**를 가져오는 Home Assistant 커스텀 통합구성요소입니다.
 
@@ -55,18 +55,24 @@
 
 각 센서는 속성으로 `Registration Date`(검침 연월)와 `Sync date`(마지막 조회 시각)를 노출합니다.
 
+## 요구사항
+
+- **Home Assistant:** 2025.8.0 이상.
+- **월패드:** 세대 에너지 검침을 지원하는 코콤 스마트홈+ 월패드.
+
 ## 설치
 
 <!-- hass-standards:installation:start -->
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=eigger&repository=hass-kocom-smarthome&category=integration)
 <!-- hass-standards:installation:end -->
 
-Home Assistant 2025.8.0 이상이 필요합니다. 배지는 HACS가 이미 설치된 인스턴스에서 저장소 화면을 열며, 아래 다운로드 및 재시작 절차를 완료해야 합니다. 사용자 지정 저장소를 추가할 때는 **통합구성요소(Integration)** 유형을 선택하세요.
+1. 위 배지를 클릭해 마켓플레이스에서 저장소를 엽니다.
+2. 저장소를 직접 추가하려면 **설정 → 마켓플레이스 → 링크에서 추가**에서 <https://github.com/eigger/hass-kocom-smarthome>을 입력합니다. 안내가 표시되면 GitHub 계정을 연결합니다.
+3. **설치**를 선택합니다. 재시작 안내가 표시되면 Home Assistant를 재시작합니다. 설치가 끝나면 [설정](#설정)으로 이동합니다.
 
-1. 이 저장소를 HACS의 사용자 지정 저장소로 추가하거나, `custom_components/kocom_smarthome` 폴더를
-   Home Assistant 설정 디렉터리의 `custom_components/` 아래에 복사합니다.
-2. Home Assistant를 재시작합니다.
-3. **설정 → 기기 및 서비스 → 통합구성요소 추가 → "코콤 스마트홈+ (에너지)"** 를 선택합니다.
+## 설정
+
+**설정 → 기기 및 서비스 → 통합 추가 → 코콤 스마트홈+ (에너지)**를 선택합니다.
 
 ### 준비물
 
