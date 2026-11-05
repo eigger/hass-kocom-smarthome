@@ -16,6 +16,8 @@ A Home Assistant custom integration that connects to a KOCOM Smart Home+ wallpad
 <!-- hass-standards:badges:end -->
 <!-- hass-standards:header:end -->
 
+![Kocom](custom_components/kocom_smarthome/brand/logo.png)
+
 - After pairing the wallpad with a mobile phone number, the integration periodically retrieves **monthly meter readings** from the apartment server.
 - For electricity, heating, hot water, gas and water, it creates sensors for **household consumption / this month's apartment average / estimated charges**.
 - Lighting, outlet and heating controls are **not yet** included. Only energy metering is currently supported.
