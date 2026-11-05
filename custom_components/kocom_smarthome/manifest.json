@@ -1,12 +1,16 @@
 {
-    "domain": "kocom_smarthome",
-    "name": "코콤 스마트홈+ (에너지)",
-    "categories": ["energy.meters_monitoring"],
-    "codeowners": ["@eigger"],
-    "config_flow": true,
-    "documentation": "https://github.com/eigger/hass-kocom-smarthome",
-    "integration_type": "hub",
-    "iot_class": "cloud_polling",
-    "issue_tracker": "https://github.com/eigger/hass-kocom-smarthome/issues",
-    "version": "1.1.2",
+  "domain": "kocom_smarthome",
+  "name": "코콤 스마트홈+ (에너지)",
+  "categories": [
+    "energy.meters_monitoring"
+  ],
+  "codeowners": [
+    "@eigger"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/eigger/hass-kocom-smarthome",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/eigger/hass-kocom-smarthome/issues",
+  "version": "1.1.2"
 }
